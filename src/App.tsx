@@ -31,7 +31,7 @@ import {
   TableCell
 } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface SelfBookingForm {
   mobno: number;
@@ -45,40 +45,29 @@ interface GuestBookingForm extends SelfBookingForm {
   guest_mobno: string;
 }
 
-const registeredUsers = [
-  {
-    id: 1,
-    mobno: '9876543210',
-    packageid: 1,
-    travel_mode: 'raj pravas',
-    car_number_plate: null
-  },
-  {
-    id: 2,
-    mobno: '9876543211',
-    guest_name: 'John Doe',
-    guest_mobno: '9876543212',
-    packageid: 2,
-    travel_mode: 'self car',
-    car_number_plate: 'GJ01AB1234'
-  }
-];
-
 function App() {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const query_mobno = query.get('mobno');
+
   const navigate = useNavigate();
 
-  // const { isPending, error, data, isFetching } = useQuery({
-  //   queryKey: ['repoData'],
-  //   queryFn: async () => {
-  //     const response = await fetch(
-  //       'https://api.github.com/repos/TanStack/query',
-  //     )
-  //     return await response.json()
-  //   },
-  // })
+  const queryClient = useQueryClient();
+
+  const {
+    isPending,
+    error,
+    data: bookingData,
+    isFetching
+  } = useQuery({
+    queryKey: ['bookingData', { mobno: query_mobno }],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://anandmohatsav-backend.onrender.com/api/booking/view?mobno=${query_mobno}`
+      );
+      return await response.json();
+    }
+  });
 
   if (!query_mobno) {
     return (
@@ -150,10 +139,47 @@ function App() {
         });
         return;
       }
-      // await submitSelfBooking(data);
-      console.log('Self booking submitted:', data);
+
+      const response: any = await fetch(
+        'https://anandmohatsav-backend.onrender.com/api/booking/self',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            mobno: data.mobno,
+            packageid: data.packageid,
+            travel_mode: data.travel_mode,
+            car_number_plate: data.car_number_plate
+          })
+        }
+      );
+
+      if (response.status == 200) {
+        toast({
+          title: 'Booking Successful'
+        });
+      } else if (response.status == 400) {
+        toast({
+          variant: 'destructive',
+          title: 'Already booked'
+        });
+        return;
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'An Error Occurred'
+        });
+        return;
+      }
+      queryClient.invalidateQueries(['bookingData']);
       setIsModalOpen(false);
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'An Error Occurred'
+      });
       console.error('Self submission error:', error);
     }
   };
@@ -181,8 +207,36 @@ function App() {
         });
         return;
       }
-      // await submitGuestBooking(data);
-      console.log('Guest booking submitted:', data);
+
+      const response: any = await fetch(
+        'https://anandmohatsav-backend.onrender.com/api/booking/guest',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }
+      );
+
+      if (response.status == 200) {
+        toast({
+          title: 'Booking Successful'
+        });
+      } else if (response.status == 400) {
+        toast({
+          variant: 'destructive',
+          title: 'Already booked'
+        });
+        return;
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'An Error Occurred'
+        });
+        return;
+      }
+      queryClient.invalidateQueries(['bookingData']);
       setIsModalOpen(false);
     } catch (error) {
       toast({
@@ -278,7 +332,7 @@ function App() {
         </div>
 
         {/* Registered Users Table */}
-        {registeredUsers.length > 0 && (
+        {bookingData?.data?.length > 0 && (
           <div className="mt-12">
             <h2 className="text-2xl font-bold mb-6">Registered Mumukshus</h2>
             <div className="rounded-md border">
@@ -289,23 +343,23 @@ function App() {
                     <TableHead>Mobile</TableHead>
                     <TableHead>Package</TableHead>
                     <TableHead>Travel Mode</TableHead>
-                    <TableHead>Car Number</TableHead>
+                    <TableHead>Booking Status</TableHead>
+                    <TableHead>Transaction Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {registeredUsers.map((user) => (
-                    <TableRow key={user.id}>
+                  {bookingData.data.map((booking) => (
+                    <TableRow key={booking.bookingid}>
                       <TableCell className="font-medium">
-                        {user.guest_name || 'Self'}
+                        {booking.guest_name}
                       </TableCell>
-                      <TableCell>{user.guest_mobno || user.mobno}</TableCell>
-                      <TableCell>
-                        {user.packageid === 1 ? 'All days' : 'Last day'}
-                      </TableCell>
+                      <TableCell>{booking.mobno}</TableCell>
+                      <TableCell>{booking.package}</TableCell>
                       <TableCell className="capitalize">
-                        {user.travel_mode.replace('_', ' ')}
+                        {booking.travel_mode.replace('_', ' ')}
                       </TableCell>
-                      <TableCell>{user.car_number_plate || '-'}</TableCell>
+                      <TableCell>{booking.booking_status}</TableCell>
+                      <TableCell>{booking.transaction_status}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -485,7 +539,7 @@ function App() {
                       <div className="flex items-center gap-2 mb-2">
                         <Phone className="text-muted-foreground" />
                         <Input
-                          placeholder="Your mobile number"
+                          placeholder="Guest mobile number"
                           type="number"
                           {...guestForm.register('guest_mobno', {
                             required: true
