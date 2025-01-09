@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import './index.css';
 import App from './App.tsx';
-import Congratulations from '@/pages/congratulations.tsx';
+import Congratulations from '@/pages/Congratulations.tsx';
 import ErrorPage from '@/pages/ErrorPage.tsx';
 
 // document.documentElement.classList.add('dark');

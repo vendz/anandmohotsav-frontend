@@ -52,12 +52,7 @@ function App() {
 
   const queryClient = useQueryClient();
 
-  const {
-    isPending,
-    error,
-    data: bookingData,
-    isFetching
-  } = useQuery({
+  const { data: bookingData } = useQuery({
     queryKey: ['bookingData', { mobno: query_mobno }],
     queryFn: async () => {
       const response = await fetch(
@@ -172,7 +167,7 @@ function App() {
         });
         return;
       }
-      queryClient.invalidateQueries(['bookingData']);
+      queryClient.invalidateQueries({ queryKey: ['bookingData'] });
       setIsModalOpen(false);
     } catch (error) {
       toast({
@@ -235,7 +230,7 @@ function App() {
         });
         return;
       }
-      queryClient.invalidateQueries(['bookingData']);
+      queryClient.invalidateQueries({ queryKey: ['bookingData'] });
       setIsModalOpen(false);
     } catch (error) {
       toast({
@@ -347,7 +342,7 @@ function App() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {bookingData.data.map((booking) => (
+                  {bookingData.data.map((booking: any) => (
                     <TableRow key={booking.bookingid}>
                       <TableCell className="font-medium">
                         {booking.guest_name}
