@@ -45,6 +45,8 @@ export default function Congratulations() {
   const navigate = useNavigate();
   const [showConfetti, setShowConfetti] = useState(false);
 
+  const query_mobno = localStorage.getItem('mobno');
+
   useEffect(() => {
     setShowConfetti(true);
     const timer = setTimeout(() => setShowConfetti(false), 5000);
@@ -95,7 +97,7 @@ export default function Congratulations() {
                 <div>
                   <p className="font-medium">Location</p>
                   <p className="text-sm text-muted-foreground">
-                    Main Event Hall
+                    Research Centre
                   </p>
                 </div>
               </div>
@@ -106,7 +108,7 @@ export default function Congratulations() {
             <Button
               className="px-8 animate-fade-in"
               style={{ animationDelay: '0.7s' }}
-              onClick={() => navigate('/?mobno=9876543210')} //TODO: fix navigation
+              onClick={() => navigate(`/?mobno=${query_mobno}`)}
             >
               Back To Home
             </Button>

@@ -22,6 +22,8 @@ export default function ErrorPage() {
   const navigate = useNavigate();
   const [showAnimation, setShowAnimation] = useState(false);
 
+  const query_mobno = localStorage.getItem('mobno');
+
   useEffect(() => {
     setShowAnimation(true);
     const timer = setTimeout(() => setShowAnimation(false), 5000);
@@ -70,7 +72,7 @@ export default function ErrorPage() {
               variant="outline"
               className="px-8 animate-fade-in inline-flex items-center gap-2"
               style={{ animationDelay: '0.7s' }}
-              onClick={() => navigate('/?mobno=9876543210')} //TODO: fix navigation
+              onClick={() => navigate(`/?mobno=${query_mobno}`)}
             >
               <ArrowLeft className="w-4 h-4" />
               Try Again

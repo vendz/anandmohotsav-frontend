@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
@@ -50,8 +50,6 @@ function App() {
   const query = new URLSearchParams(location.search);
   const query_mobno = query.get('mobno');
 
-  const navigate = useNavigate();
-
   const queryClient = useQueryClient();
 
   const {
@@ -83,6 +81,7 @@ function App() {
 
   useEffect(() => {
     if (query_mobno) {
+      localStorage.setItem('mobno', query_mobno);
       const mobnoValue = Number(query_mobno);
       if (!isNaN(mobnoValue)) {
         selfForm.setValue('mobno', mobnoValue);
