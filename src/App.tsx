@@ -30,7 +30,13 @@ import {
   TableRow,
   TableCell
 } from '@/components/ui/table';
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import {
   Accordion,
@@ -57,6 +63,9 @@ function App() {
   const query = new URLSearchParams(location.search);
   const query_mobno = query.get('mobno');
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState<string>('');
+
   // const queryClient = useQueryClient();
 
   const { Razorpay } = useRazorpay();
@@ -80,8 +89,10 @@ function App() {
       currency: orderData.data.currency,
       name: 'Anand Mahotsav',
       description: 'Payment for Anand Mahotsav',
+      image: 'https://vitraagvigyaan.org/img/logo.png',
       order_id: orderData.data.id,
       handler: (response) => {
+        setIsLoading(false);
         console.log(response);
         alert('Payment Successful!');
       },
@@ -92,6 +103,11 @@ function App() {
       },
       theme: {
         color: '#F37254'
+      },
+      modal: {
+        ondismiss: () => {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -121,12 +137,47 @@ function App() {
 
   if (!query_mobno) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold">
-            Please provide your mobile number
-          </h1>
-        </div>
+      <div className="flex h-screen items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-center gap-2">
+              <Phone className="h-6 w-6" />
+              <span>Enter Your Mobile Number</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Input
+              type="tel"
+              placeholder="Enter your mobile number"
+              value={mobileNumber}
+              onChange={(e) => setMobileNumber(e.target.value)}
+              className="text-center"
+            />
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <Button
+              onClick={() => {
+                if (
+                  mobileNumber.length !== 10 ||
+                  !mobileNumber ||
+                  mobileNumber.charAt(0) == '+' ||
+                  mobileNumber.charAt(0) == '0'
+                ) {
+                  toast({
+                    variant: 'destructive',
+                    title: 'Invalid Mobile Number',
+                    description: 'Please enter a valid mobile number'
+                  });
+                  return;
+                }
+                window.location.href = '/?mobno=' + mobileNumber;
+              }}
+              className="w-full max-w-xs"
+            >
+              Submit
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
@@ -175,6 +226,7 @@ function App() {
 
   const onSelfSubmit = async (data: SelfBookingForm) => {
     try {
+      setIsLoading(true);
       if (!data.mobno || !data.packageid || !data.travel_mode) {
         toast({
           variant: 'destructive',
@@ -229,6 +281,7 @@ function App() {
       // queryClient.invalidateQueries({ queryKey: ['bookingData'] });
       // setIsModalOpen(false);
     } catch (error) {
+      setIsLoading(false);
       toast({
         variant: 'destructive',
         title: 'An Error Occurred'
@@ -239,6 +292,7 @@ function App() {
 
   const onGuestSubmit = async (data: GuestBookingForm) => {
     try {
+      setIsLoading(true);
       if (
         !data.mobno ||
         !data.guest_name ||
@@ -294,6 +348,7 @@ function App() {
       // queryClient.invalidateQueries({ queryKey: ['bookingData'] });
       // setIsModalOpen(false);
     } catch (error) {
+      setIsLoading(false);
       toast({
         variant: 'destructive',
         title: 'An Error Occurred'
@@ -808,7 +863,11 @@ function App() {
                     )}
 
                     <div className="flex gap-2">
-                      <Button type="submit" className="flex-1">
+                      <Button
+                        type="submit"
+                        className="flex-1"
+                        disabled={isLoading}
+                      >
                         Book Event
                       </Button>
                       <Button
@@ -962,7 +1021,11 @@ function App() {
                     )}
 
                     <div className="flex gap-2">
-                      <Button type="submit" className="flex-1">
+                      <Button
+                        type="submit"
+                        className="flex-1"
+                        disabled={isLoading}
+                      >
                         Book Event
                       </Button>
                       <Button
