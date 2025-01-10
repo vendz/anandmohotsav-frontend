@@ -31,7 +31,7 @@ import {
   TableCell
 } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import {
   Accordion,
   AccordionContent,
