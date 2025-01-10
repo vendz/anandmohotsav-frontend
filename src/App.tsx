@@ -57,7 +57,7 @@ function App() {
   const query = new URLSearchParams(location.search);
   const query_mobno = query.get('mobno');
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const { Razorpay } = useRazorpay();
 
