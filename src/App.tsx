@@ -32,6 +32,12 @@ import {
 } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 
 interface SelfBookingForm {
   mobno: number;
@@ -57,6 +63,16 @@ function App() {
     queryFn: async () => {
       const response = await fetch(
         `https://anandmohatsav-backend.onrender.com/api/booking/view?mobno=${query_mobno}`
+      );
+      return await response.json();
+    }
+  });
+
+  const { data: greetingData } = useQuery({
+    queryKey: ['greetingData', { mobno: query_mobno }],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://anandmohatsav-backend.onrender.com/api/booking/greetings?mobno=${query_mobno}`
       );
       return await response.json();
     }
@@ -246,16 +262,15 @@ function App() {
       <div className="max-w-5xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          {/* <div className="inline-block">
-            <PartyPopper className="w-16 h-16 text-primary mb-4 mx-auto animate-bounce" />
-          </div> */}
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-primary to-primary/60 text-transparent bg-clip-text">
-            Anand Mohotsav
+            Anand Mahotsav
           </h1>
-          <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Join us for an unforgettable celebration of joy, culture, and
-            community spirit.
-          </p>
+          {greetingData?.data && (
+            <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
+              JSDV, {greetingData.data.issuedto}! Please join us for an
+              unforgettable celebration of joy, culture, and community spirit.
+            </p>
+          )}
 
           {/* Countdown Timer */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
@@ -652,6 +667,273 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Policy Information */}
+        <div className="mt-16 mb-8">
+          <Card className="bg-card/50 backdrop-blur">
+            <CardContent className="p-6">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="about">
+                  <AccordionTrigger>About Us</AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-muted-foreground">
+                      To learn more about us, please visit:{' '}
+                      <a
+                        href="https://www.vitraagvigyaan.org/home/knowus"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline"
+                      >
+                        https://www.vitraagvigyaan.org/home/knowus
+                      </a>
+                      .
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="privacy">
+                  <AccordionTrigger>Privacy Policy</AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-muted-foreground">
+                      This privacy policy has been compiled to better serve
+                      those who are concerned with how their 'Personally
+                      Identifiable Information' (PII) is being used online. PII,
+                      as described in US privacy law and information security,
+                      is information that can be used on its own or with other
+                      information to identify, contact, or locate a single
+                      person, or to identify an individual in context. Please
+                      read our privacy policy carefully to get a clear
+                      understanding of how we collect, use, protect or otherwise
+                      handle your Personally Identifiable Information in
+                      accordance with our website.
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 1 - WHAT DO WE DO WITH YOUR INFORMATION?</b>{' '}
+                      When you purchase something from our store, as part of the
+                      buying and selling process, we collect the personal
+                      information you give us such as your name, address and
+                      email address.When you browse our store, we also
+                      automatically receive your computer’s internet protocol
+                      (IP) address in order to provide us with information that
+                      helps us learn about your browser and operating
+                      system.Email marketing (if applicable): With your
+                      permission, we may send you emails about our store, new
+                      products and other updates. What personal information do
+                      we collect from the people that visit our blog, website or
+                      app? When ordering or registering on our site, as
+                      appropriate, you may be asked to enter your name, email
+                      address, mailing address, phone number or other details to
+                      help you with your experience.
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 2 - CONSENT How do you get my consent?</b> When
+                      you provide us with personal information to complete a
+                      transaction, verify your credit card, place an order,
+                      arrange for a delivery or return a purchase, we imply that
+                      you consent to our collecting it and using it for that
+                      specific reason only.If we ask for your personal
+                      information for a secondary reason, like marketing, we
+                      will either ask you directly for your expressed consent,
+                      or provide you with an opportunity to say no.How do I
+                      withdraw my consent?If after you opt-in, you change your
+                      mind, you may withdraw your consent for us to contact you,
+                      for the continued collection, use or disclosure of your
+                      information, at any time, by contacting us at
+                      ss@vitraagvigyaan.org or mailing us at: Raj Nagar, Parli,
+                      Post Gothavade, Taluka Sudhagadh, Off Khopoli-Pali Road
+                      (same road as Adlabs Imagica), Dist. Raigad- 410205
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 3 - DISCLOSURE</b> We may disclose your
+                      personal information if we are required by law to do so or
+                      if you violate our Terms of Service.
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 4 - PAYMENT</b> We use Razorpay for processing
+                      payments. We/Razorpay do not store your card data on their
+                      servers. The data is encrypted through the Payment Card
+                      Industry Data Security Standard (PCI-DSS) when processing
+                      payment. Your purchase transaction data is only used as
+                      long as is necessary to complete your purchase
+                      transaction. After that is complete, your purchase
+                      transaction information is not saved.Our payment gateway
+                      adheres to the standards set by PCI-DSS as managed by the
+                      PCI Security Standards Council, which is a joint effort of
+                      brands like Visa, MasterCard, American Express and
+                      Discover.PCI-DSS requirements help ensure the secure
+                      handling of credit card information by our store and its
+                      service providers.For more insight, you may also want to
+                      read terms and conditions of razorpay on
+                      https://razorpay.com/
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 5 - THIRD-PARTY SERVICES</b> In general, the
+                      third-party providers used by us will only collect, use
+                      and disclose your information to the extent necessary to
+                      allow them to perform the services they provide to
+                      us.However, certain third-party service providers, such as
+                      payment gateways and other payment transaction processors,
+                      have their own privacy policies in respect to the
+                      information we are required to provide to them for your
+                      purchase-related transactions.For these providers, we
+                      recommend that you read their privacy policies so you can
+                      understand the manner in which your personal information
+                      will be handled by these providers.In particular, remember
+                      that certain providers may be located in or have
+                      facilities that are located a different jurisdiction than
+                      either you or us. So if you elect to proceed with a
+                      transaction that involves the services of a third-party
+                      service provider, then your information may become subject
+                      to the laws of the jurisdiction(s) in which that service
+                      provider or its facilities are located.Once you leave our
+                      store’s website or are redirected to a third-party website
+                      or application, you are no longer governed by this Privacy
+                      Policy or our website’s Terms of Service.LinksWhen you
+                      click on links on our store, they may direct you away from
+                      our site. We are not responsible for the privacy practices
+                      of other sites and encourage you to read their privacy
+                      statements.
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 6 - SECURITY</b> To protect your personal
+                      information, we take reasonable precautions and follow
+                      industry best practices to make sure it is not
+                      inappropriately lost, misused, accessed, disclosed,
+                      altered or destroyed.
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 7 - COOKIES</b> We use cookies to maintain
+                      session of your user. It is not used to personally
+                      identify you on other websites
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 8 - AGE OF CONSENT</b> By using this site, you
+                      represent that you are at least the age of majority in
+                      your state or province of residence, or that you are the
+                      age of majority in your state or province of residence and
+                      you have given us your consent to allow any of your minor
+                      dependents to use this site.
+                    </p>
+
+                    <br />
+
+                    <p className="text-muted-foreground">
+                      <b>SECTION 9 - CHANGES TO THIS PRIVACY POLICY</b> We
+                      reserve the right to modify this privacy policy at any
+                      time, so please review it frequently. Changes and
+                      clarifications will take effect immediately upon their
+                      posting on the website. If we make material changes to
+                      this policy, we will notify you here that it has been
+                      updated, so that you are aware of what information we
+                      collect, how we use it, and under what circumstances, if
+                      any, we use and/or disclose it.If our store is acquired or
+                      merged with another company, your information may be
+                      transferred to the new owners so that we may continue to
+                      sell products to you.QUESTIONS AND CONTACT INFORMATIONIf
+                      you would like to: access, correct, amend or delete any
+                      personal information we have about you, register a
+                      complaint, or simply want more information contact our Sat
+                      Shrut Team at ss@vitraagvigyaan.org or by mail at Raj
+                      Nagar, Parli, Post Gothavade, Taluka Sudhagadh, Off
+                      Khopoli-Pali Road (same road as Adlabs Imagica), Dist.
+                      Raigad- 410205Refund and Cancellation policyOnce the
+                      purchase has been made, there is no cancellation, return
+                      or refund policy applicable in context of this purchase.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="refund">
+                  <AccordionTrigger>Refund Policy</AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-muted-foreground">
+                      Thank you for visiting{' '}
+                      <b>anandmahotsav.vitraagvigyaan.org.</b> Please note that{' '}
+                      <b>
+                        all payments made on this website are non-refundable.
+                      </b>{' '}
+                      Once a payment has been successfully processed, no refunds
+                      will be issued under any circumstances. We encourage you
+                      to carefully review all details before completing your
+                      transaction. For any urgent matters or concerns, please
+                      feel free to contact us at{' '}
+                      <a
+                        href="mailto:ss@vitraagvigyaan.org"
+                        target="_blank"
+                        className="text-blue-500 underline"
+                      >
+                        ss@vitraagvigyaan.org
+                      </a>
+                      , and we will do our best to assist you. Thank you for
+                      your understanding and support.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="contact">
+                  <AccordionTrigger>Contact Us</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2 text-muted-foreground">
+                      <p>
+                        <b>Name:</b> Darshan Soni
+                      </p>
+                      <p>
+                        <b>Address:</b> Raj Nagar, Parli, Post Gothavade,Taluka
+                        Sudhagadh, Off Khopoli-Pali RoadDist. Raigad- 410205,
+                        Maharashtra.
+                      </p>
+                      <p>
+                        <b>Email:</b>{' '}
+                        <a
+                          href="mailto:ss@vitraagvigyaan.org"
+                          target="_blank"
+                          className="text-blue-500 underline"
+                        >
+                          ss@vitraagvigyaan.org
+                        </a>
+                      </p>
+                      <p>
+                        <b>Phone:</b>{' '}
+                        <a
+                          href="tel:+91-9876543210"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 underline"
+                        >
+                          +91-9876543210
+                        </a>
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
