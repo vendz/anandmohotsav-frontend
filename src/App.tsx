@@ -354,14 +354,24 @@ function App() {
       <div className="max-w-5xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-16">
+          <div className="flex items-center justify-center">
+            <img src="/logo.png" alt="logo" className="w-32 mb-4" />
+          </div>
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-primary to-primary/60 text-transparent bg-clip-text">
             Anand Mahotsav
           </h1>
           {greetingData?.data && (
-            <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-              <b>JSDV, {greetingData.data.issuedto}!</b> Please join us for an
-              unforgettable celebration of joy, culture, and community spirit.
-            </p>
+            <>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                <b className="text-orange-400 text-xl">
+                  JSDV, {greetingData.data.issuedto}!
+                </b>
+              </p>
+              <p className="text-lg text-muted-foreground mb-12 mx-auto">
+                Please join us for an unforgettable celebration of Param Pujya
+                Premacharyaji's Punya Tithi!
+              </p>
+            </>
           )}
 
           {/* Countdown Timer */}
@@ -434,7 +444,7 @@ function App() {
                 className="w-full text-lg font-semibold"
                 onClick={() => setIsModalOpen(true)}
               >
-                Book Your Spot Now
+                Pay Now!
               </Button>
             </div>
           </Card>
