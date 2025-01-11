@@ -23,14 +23,6 @@ import {
   SelectItem
 } from '@/components/ui/select';
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell
-} from '@/components/ui/table';
-import {
   Card,
   CardContent,
   CardFooter,
@@ -88,7 +80,7 @@ function App() {
       amount: orderData.data.amount,
       currency: orderData.data.currency,
       name: 'Anand Mahotsav',
-      description: 'Payment for Anand Mahotsav',
+      description: 'Anand Mahotsav',
       image: 'https://vitraagvigyaan.org/img/logo.png',
       order_id: orderData.data.id,
       handler: (response) => {
@@ -115,15 +107,15 @@ function App() {
     razorpayInstance.open();
   };
 
-  const { data: bookingData } = useQuery({
-    queryKey: ['bookingData', { mobno: query_mobno }],
-    queryFn: async () => {
-      const response = await fetch(
-        `https://anandmohatsav-backend.onrender.com/api/booking/view?mobno=${query_mobno}`
-      );
-      return await response.json();
-    }
-  });
+  // const { data: bookingData } = useQuery({
+  //   queryKey: ['bookingData', { mobno: query_mobno }],
+  //   queryFn: async () => {
+  //     const response = await fetch(
+  //       `https://anandmohatsav-backend.onrender.com/api/booking/view?mobno=${query_mobno}`
+  //     );
+  //     return await response.json();
+  //   }
+  // });
 
   const { data: greetingData } = useQuery({
     queryKey: ['greetingData', { mobno: query_mobno }],
@@ -367,7 +359,7 @@ function App() {
           </h1>
           {greetingData?.data && (
             <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-              JSDV, {greetingData.data.issuedto}! Please join us for an
+              <b>JSDV, {greetingData.data.issuedto}!</b> Please join us for an
               unforgettable celebration of joy, culture, and community spirit.
             </p>
           )}
@@ -415,7 +407,15 @@ function App() {
                 <MapPin className="w-6 h-6 text-primary" />
                 <div>
                   <h3 className="font-semibold">Venue</h3>
-                  <p className="text-muted-foreground">Research centre</p>
+                  <p className="text-muted-foreground">
+                    <a
+                      href="https://maps.app.goo.gl/hkZtyMjRP4U9csEx7"
+                      target="_blank"
+                      className="text-blue-500 underline"
+                    >
+                      Shrimad Rajchandra Aatma Tatva Research Centre
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -439,43 +439,6 @@ function App() {
             </div>
           </Card>
         </div>
-
-        {/* Registered Users Table */}
-        {bookingData?.data?.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">Registered Mumukshus</h2>
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Mobile</TableHead>
-                    <TableHead>Package</TableHead>
-                    <TableHead>Travel Mode</TableHead>
-                    <TableHead>Booking Status</TableHead>
-                    <TableHead>Transaction Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {bookingData.data.map((booking: any) => (
-                    <TableRow key={booking.bookingid}>
-                      <TableCell className="font-medium">
-                        {booking.guest_name}
-                      </TableCell>
-                      <TableCell>{booking.mobno}</TableCell>
-                      <TableCell>{booking.package}</TableCell>
-                      <TableCell className="capitalize">
-                        {booking.travel_mode.replace('_', ' ')}
-                      </TableCell>
-                      <TableCell>{booking.booking_status}</TableCell>
-                      <TableCell>{booking.transaction_status}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-        )}
 
         {/* Policy Information */}
         <div className="mt-16 mb-8">
@@ -737,6 +700,84 @@ function App() {
                         </a>
                       </p>
                     </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="terms">
+                  <AccordionTrigger>Terms & Conditions</AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-muted-foreground">
+                      Welcome to <b>Anand Mahotsav!</b> By using our website,
+                      you agree to the following terms and conditions. Please
+                      read them carefully before proceeding.
+                    </p>
+                    <p className="text-muted-foreground">
+                      <b>1. General Information</b>
+                    </p>
+                    <p className="text-muted-foreground">
+                      This website, accessible at{' '}
+                      <a
+                        href="https://anandmahotsav.vitraagvigyaan.org"
+                        target="_blank"
+                        className="text-blue-500 underline"
+                      >
+                        https://anandmahotsav.vitraagvigyaan.org
+                      </a>
+                      , is operated by the organizers of Anand Mahotsav. By
+                      accessing or using our site, you agree to comply with
+                      these terms.
+                    </p>
+
+                    <p className="text-muted-foreground">
+                      <b>2. Event Registration and Payments</b>
+                    </p>
+                    <p className="text-muted-foreground">
+                      All registrations and payments made on this website are
+                      final. Please ensure that all information provided during
+                      the registration process is accurate and complete.
+                    </p>
+
+                    <p className="text-muted-foreground">
+                      <b>3. No Refund Policy</b>
+                    </p>
+                    <p className="text-muted-foreground">
+                      All payments made for event registrations, contributions,
+                      or other services offered through this website are{' '}
+                      <b>non-refundable</b>. This policy applies under all
+                      circumstances, including but not limited to cancellations
+                      or no-shows.
+                    </p>
+
+                    <p className="text-muted-foreground">
+                      <b>4. Changes to the Event</b>
+                    </p>
+                    <p className="text-muted-foreground">
+                      The organizers reserve the right to make changes to the
+                      event, including schedule, speakers, or venue, if
+                      necessary. Any such changes will be communicated in a
+                      timely manner.
+                    </p>
+
+                    <p className="text-muted-foreground">
+                      <b>5. Intellectual Property</b>
+                    </p>
+                    <p className="text-muted-foreground">
+                      All content on this website, including text, images, and
+                      media, is the property of Anand Mahotsav and is protected
+                      by intellectual property laws. You may not reproduce,
+                      distribute, or use any content without prior written
+                      consent.
+                    </p>
+
+                    <p className="text-muted-foreground">
+                      <b>6. Disclaimer</b>
+                    </p>
+                    <p className="text-muted-foreground">
+                      The organizers strive to provide accurate and up-to-date
+                      information. However, we do not guarantee the
+                      completeness, accuracy, or reliability of any content on
+                      this website.
+                    </p>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
