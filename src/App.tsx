@@ -220,6 +220,7 @@ function App() {
     try {
       setIsLoading(true);
       if (!data.mobno || !data.packageid || !data.travel_mode) {
+        setIsLoading(false);
         toast({
           variant: 'destructive',
           title: 'Please fill all the required fields'
@@ -228,6 +229,7 @@ function App() {
       }
 
       if (data.travel_mode === 'self car' && !data.car_number_plate) {
+        setIsLoading(false);
         toast({
           variant: 'destructive',
           title: 'Please fill all the required fields'
@@ -292,6 +294,7 @@ function App() {
         !data.packageid ||
         !data.travel_mode
       ) {
+        setIsLoading(false);
         toast({
           variant: 'destructive',
           title: 'Please fill all the required fields'
@@ -300,6 +303,7 @@ function App() {
       }
 
       if (data.travel_mode === 'self car' && !data.car_number_plate) {
+        setIsLoading(false);
         toast({
           variant: 'destructive',
           title: 'Please fill all the required fields'
